@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <RootNamespace>einthu_stream</RootNamespace>
+    <RootNamespace>EinthuStream</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

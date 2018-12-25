@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace einthu_stream.Controllers
+namespace EinthuStream.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
