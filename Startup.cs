@@ -21,7 +21,7 @@ namespace EinthuStream {
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services) {
-            services.AddResponseCaching().AddResponseCompression().AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddResponseCompression().AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
@@ -31,18 +31,19 @@ namespace EinthuStream {
                 app.UseHsts();
             }
 
-            app.UseResponseCaching();
-            app.Use(async(context, next) => {
-                context.Response.GetTypedHeaders().CacheControl =
-                new Microsoft.Net.Http.Headers.CacheControlHeaderValue() {
-                Public = true,
-                MaxAge = TimeSpan.FromHours(1)
-                    };
-                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-                    new string[] { "Accept-Encoding" };
+            // app.UseResponseCaching();
+            // app.Use(async(context, next) => {
+            //     context.Response.GetTypedHeaders().CacheControl =
+            //     new Microsoft.Net.Http.Headers.CacheControlHeaderValue() {
+            //     Public = true,
+            //     MaxAge = TimeSpan.FromMinutes(5),
+            //     MaxStaleLimit = TimeSpan.FromMinutes(15)
+            //         };
+            //     context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+            //         new string[] { "Accept-Encoding" };
 
-                await next();
-            });
+            //     await next();
+            // });
 
             app.UseResponseCompression();
             app.UseHttpsRedirection();
