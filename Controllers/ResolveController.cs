@@ -20,27 +20,14 @@ namespace EinthuStream.Controllers {
         }
 
         class Resolver {
-            private static RestClient _client;
-            private static void Initialize() {
-                if (_client is null)_client = new RestClient {
-                    CookieContainer = new CookieContainer(),
-                        BaseUrl = new Uri("https://einthusan.tv"),
-                        UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0"
-                };
-            }
-
             public static async Task<string> Resolve(string id) {
-                Initialize();
                 var data = await GetResultPage(id);
                 var encoded = await GetEncodedUrl(id, data);
                 return await DecodeUrl(encoded);
             }
 
             private static async Task<string[]> GetResultPage(string id) {
-                var getReq = new RestRequest("/movie/watch/" + id, Method.GET);
-                var getResponse = await _client.ExecuteTaskAsync(getReq);
-
-                var doc = await new HtmlParser().ParseAsync(getResponse.Content);
+                var doc = await Requester.GetDocumentAsync(new RestRequest("/movie/watch/" + id));
                 var pageId = doc.GetElementsByTagName("html")[0].GetAttribute("data-pageid");
                 var pingables = doc.GetElementById("UIVideoPlayer").GetAttribute("data-ejpingables");
 
@@ -55,8 +42,7 @@ namespace EinthuStream.Controllers {
                 postReq.AddParameter("xJson", "{\"EJOutcomes\":\"" + data[1] + "\",\"NativeHLS\":false}");
                 postReq.AddParameter("gorilla.csrf.Token", data[0]);
 
-                var postResponse = await _client.ExecuteTaskAsync(postReq);
-                var json = JObject.Parse(postResponse.Content);
+                var json = JObject.Parse(await Requester.GetContentAsync(postReq));
                 return json["Data"]["EJLinks"].Value<string>();
             }
 
