@@ -9,6 +9,13 @@ namespace EinthuStream {
             public string Avatar { get; set; }
         }
 
+        public enum Type {
+            Unknown = -1,
+            Action = 0,
+            Comedy = 1,
+            Romance = 2
+        }
+
         public string Title { get; set; }
         public string CoverImageUrl { get; set; }
         public int Year { get; set; }
@@ -18,6 +25,7 @@ namespace EinthuStream {
         public double Rating { get; set; }
         public string Language { get; set; }
         public bool IsPopular { get; set; }
+        public Type Genre { get; set; }
         public string Wiki { get; set; }
         public string Trailer { get; set; }
 

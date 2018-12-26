@@ -13,7 +13,6 @@ namespace EinthuStream.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class ResolveController : ControllerBase {
-        // GET api/values
         [HttpGet]
         public async Task<string> Get([FromQuery] string id) {
             return await Resolver.Resolve(id);

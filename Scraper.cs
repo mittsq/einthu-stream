@@ -19,12 +19,7 @@ namespace EinthuStream {
             return link;
         }
 
-        public static /* async Task<Result> */ Result ScrapeAsync(IElement parent /* string id */) {
-            // var getReq = new RestRequest($"/movie/watch/{id}/", Method.GET);
-            // var getResponse = await new RestClient("https://einthusan.tv").ExecuteTaskAsync(getReq);
-            // var doc = await new HtmlParser().ParseAsync(getResponse.Content);   
-            // var parent = doc.QuerySelector("#UIMovieSummary li");
-
+        public static Result ScrapeAsync(IElement parent) {
             var yearLang = parent.QuerySelector(".block2 .info > p")?.TextContent;
             var prof = parent.QuerySelectorAll(".block2 .professionals > div").Select(_ => {
                 var name = _.QuerySelector(".prof p")?.TextContent;
@@ -39,8 +34,23 @@ namespace EinthuStream {
                 };
             }).ToList();
             var _extras = parent.QuerySelectorAll(".block3 .extras a")?.Select(_ => _.GetAttribute("href")).ToArray();
-            var _rating = parent.QuerySelectorAll(".block3 .average-rating p")?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToList();
-            var rating = _rating.Count == 0 ? 0.0 : Math.Round(_rating.Average() / ROUND_TO) * ROUND_TO;
+
+            var _rating = parent.QuerySelectorAll(".block3 .average-rating p")?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToArray();
+            var rating = 0.0;
+            var genre = Result.Type.Unknown;
+            if (_rating.Length != 0) {
+                var avg = (_rating[3] + _rating[4]) / 2;
+                rating = Math.Round(avg / ROUND_TO) * ROUND_TO;
+
+                var gIdx = 0;
+                for (var i = 1; i < 3; ++i) {
+                    if (_rating[i] > _rating[gIdx]) {
+                        gIdx = i;
+                    }
+                }
+                genre = (Result.Type)gIdx;
+            }
+
             var url = parent.QuerySelector(".block2 .title")?.GetAttribute("href");
             var desc = parent.QuerySelector(".block2 .synopsis")?.TextContent;
             var pop = parent.QuerySelector(".block2 .title .popular") != null;
@@ -52,6 +62,7 @@ namespace EinthuStream {
             var trailer = _extras?[1];
             var wiki = _extras?[0];
             var year = int.Parse(yearLang?.Substring(0, 4));
+
             return new Result {
                 CoverImageUrl = NormalizeLink(img),
                     Description = desc,
@@ -63,18 +74,14 @@ namespace EinthuStream {
                     Qualities = q,
                     Rating = rating,
                     Title = title,
+                    Genre = genre,
                     Trailer = NormalizeLink(trailer),
                     Wiki = NormalizeLink(wiki),
                     Year = year
             };
         }
 
-        public static /* async Task<Result> */ Result ScrapePopularAsync(IElement parent /* string id */) {
-            // var getReq = new RestRequest($"/movie/watch/{id}/", Method.GET);
-            // var getResponse = await new RestClient("https://einthusan.tv").ExecuteTaskAsync(getReq);
-            // var doc = await new HtmlParser().ParseAsync(getResponse.Content);   
-            // var parent = doc.QuerySelector("#UIMovieSummary li");
-
+        public static Result ScrapePopularAsync(IElement parent) {
             var yearLang = parent.QuerySelector(".block2 .info > p")?.TextContent;
             var prof = parent.QuerySelectorAll(".block2 .professionals > div").Select(_ => {
                 var name = _.QuerySelector("div p")?.TextContent;
@@ -89,8 +96,23 @@ namespace EinthuStream {
                 };
             }).ToList();
             var _extras = parent.QuerySelectorAll(".block2 .extras a")?.Select(_ => _.GetAttribute("href")).ToArray();
-            var _rating = parent.QuerySelectorAll(".block2 .average-rating p")?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToList();
-            var rating = _rating.Count == 0 ? 0.0 : Math.Round(_rating.Average() / ROUND_TO) * ROUND_TO;
+            
+            var _rating = parent.QuerySelectorAll(".block2 .average-rating p")?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToArray();
+            var rating = 0.0;
+            var genre = Result.Type.Unknown;
+            if (_rating.Length != 0) {
+                var avg = (_rating[3] + _rating[4]) / 2;
+                rating = Math.Round(avg / ROUND_TO) * ROUND_TO;
+
+                var gIdx = 0;
+                for (var i = 1; i < 3; ++i) {
+                    if (_rating[i] > _rating[gIdx]) {
+                        gIdx = i;
+                    }
+                }
+                genre = (Result.Type)gIdx;
+            }
+
             var url = parent.QuerySelector(".block2 .title")?.GetAttribute("href");
             // var desc = parent.QuerySelector(".block2 .synopsis")?.TextContent;
             // var pop = parent.QuerySelector(".block2 .title .popular") != null;
@@ -113,6 +135,7 @@ namespace EinthuStream {
                     Qualities = q,
                     Rating = rating,
                     Title = title,
+                    Genre = genre,
                     Trailer = NormalizeLink(trailer),
                     Wiki = NormalizeLink(wiki),
                     Year = year
