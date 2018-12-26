@@ -24,5 +24,7 @@ namespace EinthuStream {
         public List<Professional> Professionals { get; set; }
 
         public string Id { get; set; }
+
+        public static string GetIdFromUrl(string url) => Regex.Match(url, @"\/movie\/watch\/(.*?)(?:$|\/)").Groups[1].Value;
     }
 }
