@@ -44,16 +44,16 @@ class Result {
     wiki = json['wiki'];
     trailer = json['trailer'];
     if (json['professionals'] != null) {
-      professionals = new List<Professionals>();
+      professionals = List<Professionals>();
       json['professionals'].forEach((v) {
-        professionals.add(new Professionals.fromJson(v));
+        professionals.add(Professionals.fromJson(v));
       });
     }
     id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = this.title;
     data['coverImageUrl'] = this.coverImageUrl;
     data['year'] = this.year;
@@ -91,7 +91,7 @@ class Professionals {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = this.name;
     data['role'] = this.role;
     data['avatar'] = this.avatar;
