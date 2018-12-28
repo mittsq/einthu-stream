@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Result {
   String title;
   String coverImageUrl;
@@ -29,6 +31,82 @@ class Result {
       this.trailer,
       this.professionals,
       this.id});
+
+  Widget build() {
+    final line2 = <String>[
+      this.language,
+      this.year.toString(),
+      this.genre.toString().split('.').last
+    ].join(' • ');
+
+    final q = this.qualities.map((i) {
+      switch (i) {
+        case 'sd':
+          return 'SD';
+        case 'hd':
+          return 'HD';
+        case 'ultrahd':
+          return '4K';
+      }
+    }).join(' ');
+
+    final l3 = <String>[
+      '${this.rating.toString()} ★',
+      q,
+    ];
+    if (this.hasSubtitles) l3.add('CC');
+    if (this.isPopular) l3.add('Popular');
+    final line3 = l3.join(' • ');
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.network(
+                this.coverImageUrl,
+                height: 180,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        this.title,
+                        style: TextStyle(fontSize: 24),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                      ),
+                      Text(line2, style: TextStyle(fontSize: 16)),
+                      Text(line3, style: TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                ),
+              ),
+              PopupMenuButton(
+                itemBuilder: (context) => <PopupMenuEntry>[
+                      PopupMenuItem(
+                        child: Text('Download'),
+                      ),
+                      PopupMenuDivider(),
+                      PopupMenuItem(
+                        child: Text('Watch trailer'),
+                      ),
+                      PopupMenuItem(
+                        child: Text('Visit wiki page'),
+                      ),
+                    ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Result.fromJson(Map<String, dynamic> json) {
     title = json['title'];

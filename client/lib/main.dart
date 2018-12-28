@@ -1,9 +1,13 @@
 import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  debugPaintSizeEnabled = true;
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -31,15 +35,15 @@ class _PopularScreenState extends State<PopularScreen> {
   @override
   void initState() {
     super.initState();
-    // refresh();
-    _popItems = Adapter.getPopular('hindi');
+    refresh();
   }
 
-  // void refresh() {
-  //   // final prefs = await SharedPreferences.getInstance();
-  //   _popItems =
-  //       Adapter.getPopular(/* prefs.getString('language') ?? */ 'hindi');
-  // }
+  void refresh() async {
+    final prefs = await SharedPreferences.getInstance();
+    this.setState(() {
+      _popItems = Adapter.getPopular(prefs.getString('language') ?? 'hindi');
+    });
+  }
 
   Widget _generate() {
     return FutureBuilder<List<Result>>(
@@ -47,28 +51,28 @@ class _PopularScreenState extends State<PopularScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.length == 0) {
-            return new Center(
-              child: new Text(
+            return Center(
+              child: Text(
                 'Nothing to show',
-                style: new TextStyle(fontStyle: FontStyle.italic),
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             );
           }
-          return new ListView(
-            children: snapshot.data.map((i) => new Text(i.title)).toList(),
+          return ListView(
+            children: snapshot.data.map((i) => i.build()).toList(),
           );
         } else if (snapshot.hasError) {
-          return new Center(
-            child: new Column(
+          return Center(
+            child: Column(
               children: <Widget>[
-                new Icon(Icons.error),
-                new Text('Could not load popular movies'),
+                Icon(Icons.error),
+                Text('Could not load popular movies'),
               ],
             ),
           );
         }
-        return new Center(
-          child: new CircularProgressIndicator(),
+        return Center(
+          child: CircularProgressIndicator(),
         );
       },
     );
@@ -79,13 +83,39 @@ class _PopularScreenState extends State<PopularScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Einthu Stream"),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(Icons.settings),
-        //     onPressed: () => {},
-        //     tooltip: 'Settings',
-        //   ),
-        // ],
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+            tooltip: 'Search',
+          ),
+          IconButton(
+            icon: Icon(Icons.cast),
+            onPressed: () {},
+            tooltip: 'Chromecast',
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => <PopupMenuEntry>[
+                  PopupMenuItem(
+                    child: Text('Refresh'),
+                    value: 0,
+                  ),
+                  // PopupMenuDivider(),
+                  PopupMenuItem(
+                    child: Text('Settings'),
+                    value: 1,
+                  ),
+                ],
+            onSelected: (i) {
+              switch (i) {
+                case 0:
+                  this.refresh();
+                  break;
+                default:
+              }
+            },
+          ),
+        ],
       ),
       body: _generate(),
     );
