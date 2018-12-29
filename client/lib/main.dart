@@ -16,9 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Einthu Stream',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
+      theme: ThemeData.light(),
       home: PopularScreen(),
     );
   }
@@ -68,7 +66,7 @@ class _PopularScreenState extends State<PopularScreen> {
                 );
               }
               return ListView(
-                children: snapshot.data.map((i) => i.build()).toList(),
+                children: snapshot.data.map((i) => i.build(context)).toList(),
               );
             }
             return Center(
@@ -99,7 +97,7 @@ class _PopularScreenState extends State<PopularScreen> {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchScreen(null),
+                  builder: (context) => SearchScreen(),
                 ),
               );
             },

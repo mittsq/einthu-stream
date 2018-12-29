@@ -5,25 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
-  SearchScreen(String q, {Key key}) : super(key: key) {
-    _q = q;
-  }
-
-  String _q;
+  SearchScreen({Key key}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState(_q);
+  _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   String _query;
   Future<List<Result>> _results;
   TextEditingController _controller = TextEditingController();
-
-  _SearchScreenState(String q) : super() {
-    _query = q;
-    _controller.text = q;
-  }
 
   void refresh() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,7 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               }
               return ListView(
-                children: snapshot.data.map((i) => i.build()).toList(),
+                children: snapshot.data.map((i) => i.build(context)).toList(),
               );
             }
             return Center(

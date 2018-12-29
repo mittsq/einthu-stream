@@ -1,4 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
+import 'package:einthu_stream/player.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 
@@ -34,7 +35,7 @@ class Result {
       this.professionals,
       this.id});
 
-  Widget build() {
+  Widget build(BuildContext context) {
     final line2 = <String>[
       this.language,
       this.year.toString(),
@@ -65,7 +66,10 @@ class Result {
     return Card(
       child: InkWell(
         onTap: () async {
-          await launcher.launch(await Adapter.resolve(this.id));
+          final url = await Adapter.resolve(this.id);
+          await launcher.launch(url);
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => PlayerScreen(movie: this)));
         },
         child: Padding(
           padding: const EdgeInsets.all(8),
