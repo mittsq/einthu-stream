@@ -1,7 +1,6 @@
 import 'package:einthu_stream/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
-import 'package:transparent_image/transparent_image.dart';
 
 class Result {
   String title;
@@ -74,9 +73,9 @@ class Result {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                FadeInImage.memoryNetwork(
+                FadeInImage.assetNetwork(
                   image: this.coverImageUrl,
-                  placeholder: kTransparentImage,
+                  placeholder: 'assets/placeholder.png',
                   width: 120,
                   height: 180,
                   fit: BoxFit.cover,
