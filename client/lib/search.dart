@@ -1,37 +1,28 @@
 import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/result.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:einthu_stream/search.dart';
 
-void main() {
-  debugPaintSizeEnabled = true;
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Einthu Stream',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: PopularScreen(),
-    );
+class SearchScreen extends StatefulWidget {
+  SearchScreen(String q, {Key key}) : super(key: key) {
+    _q = q;
   }
-}
 
-class PopularScreen extends StatefulWidget {
-  PopularScreen({Key key}) : super(key: key);
+  String _q;
 
   @override
-  _PopularScreenState createState() => _PopularScreenState();
+  _SearchScreenState createState() => _SearchScreenState(_q);
 }
 
-class _PopularScreenState extends State<PopularScreen> {
-  Future<List<Result>> _popItems;
+class _SearchScreenState extends State<SearchScreen> {
+  String _query;
+  Future<List<Result>> _results;
+  TextEditingController _controller = TextEditingController();
+
+  _SearchScreenState(String q) : super() {
+    _query = q;
+    _controller.text = q;
+  }
 
   @override
   void initState() {
@@ -40,21 +31,18 @@ class _PopularScreenState extends State<PopularScreen> {
   }
 
   void refresh() async {
-    final prefs = await SharedPreferences.getInstance();
-    this.setState(() {
-      _popItems = Adapter.getPopular(prefs.getString('language') ?? 'hindi');
-    });
+    _results = Adapter.search(_query, 'hindi', 1);
   }
 
-  Widget _generate() {
+  Widget _buildResults() {
     return FutureBuilder<List<Result>>(
-      future: _popItems,
+      future: _results,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.length == 0) {
             return Center(
               child: Text(
-                'Nothing to show',
+                'No results',
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             );
@@ -67,7 +55,7 @@ class _PopularScreenState extends State<PopularScreen> {
             child: Column(
               children: <Widget>[
                 Icon(Icons.error),
-                Text('Could not load popular movies'),
+                Text('Could not perform search'),
               ],
             ),
           );
@@ -83,7 +71,7 @@ class _PopularScreenState extends State<PopularScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Einthu Stream'),
+        title: Text(_query),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -91,18 +79,19 @@ class _PopularScreenState extends State<PopularScreen> {
               final dialog = Dialog(
                 child: Container(
                   child: TextField(
+                    controller: _controller,
                     autofocus: true,
                     decoration: InputDecoration(
                       hintText: 'Search ...',
                       contentPadding: EdgeInsets.all(16),
                     ),
                     onSubmitted: (text) async {
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchScreen(text),
-                        ),
-                      );
+                      this.setState(() {
+                        _query = text;
+                        _controller.text = text;
+                        refresh();
+                        Navigator.pop(context);
+                      });
                     },
                   ),
                 ),
@@ -132,7 +121,7 @@ class _PopularScreenState extends State<PopularScreen> {
             onSelected: (i) {
               switch (i) {
                 case 0:
-                  this.refresh();
+                  // this.refresh();
                   break;
                 default:
               }
@@ -140,7 +129,7 @@ class _PopularScreenState extends State<PopularScreen> {
           ),
         ],
       ),
-      body: _generate(),
+      body: _buildResults(),
     );
   }
 }

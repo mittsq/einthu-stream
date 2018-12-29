@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class Result {
   String title;
@@ -48,12 +49,11 @@ class Result {
         case 'ultrahd':
           return '4K';
       }
-    }).join(' ');
+    }).join(' • ');
 
-    final l3 = <String>[
-      '${this.rating.toString()} ★',
-      q,
-    ];
+    final l3 = <String>[];
+    l3.add(this.rating == 0 ? 'Unrated' : '${this.rating.toString()} ★');
+    l3.add(q);
     if (this.hasSubtitles) l3.add('CC');
     if (this.isPopular) l3.add('Popular');
     final line3 = l3.join(' • ');
@@ -91,15 +91,32 @@ class Result {
                 itemBuilder: (context) => <PopupMenuEntry>[
                       PopupMenuItem(
                         child: Text('Download'),
+                        value: 0,
                       ),
                       PopupMenuDivider(),
                       PopupMenuItem(
                         child: Text('Watch trailer'),
+                        value: 1,
                       ),
                       PopupMenuItem(
                         child: Text('Visit wiki page'),
+                        value: 2,
                       ),
                     ],
+                onSelected: (i) async {
+                  switch (i) {
+                    case 0:
+                      break;
+                    case 1:
+                      await launcher.launch(this.trailer);
+                      break;
+                    case 2:
+                      await launcher.launch(this.wiki);
+                      break;
+                    default:
+                      break;
+                  }
+                },
               ),
             ],
           ),
