@@ -1,4 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
+import 'package:einthu_stream/lang.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -50,32 +51,38 @@ class _PopularScreenState extends State<PopularScreen> {
     return FutureBuilder<List<Result>>(
       future: _popItems,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.length == 0) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+          case ConnectionState.active:
             return Center(
-              child: Text(
-                'Nothing to show',
-                style: TextStyle(fontStyle: FontStyle.italic),
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Center(
+                  child: Text(
+                    'Nothing to show',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                );
+              }
+              return ListView(
+                children: snapshot.data.map((i) => i.build()).toList(),
+              );
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.error),
+                  Text('Could not load popular movies'),
+                ],
               ),
             );
-          }
-          return ListView(
-            children: snapshot.data.map((i) => i.build()).toList(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.error),
-                Text('Could not load popular movies'),
-              ],
-            ),
-          );
+          default:
+            return Container();
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
       },
     );
   }
@@ -106,20 +113,15 @@ class _PopularScreenState extends State<PopularScreen> {
           PopupMenuButton(
             itemBuilder: (context) => <PopupMenuEntry>[
                   PopupMenuItem(
-                    child: Text('Refresh'),
+                    child: Text('Select language ...'),
                     value: 0,
-                    enabled: false,
-                  ),
-                  // PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: Text('Settings'),
-                    value: 1,
                   ),
                 ],
-            onSelected: (i) {
+            onSelected: (i) async {
               switch (i) {
                 case 0:
-                  this.refresh();
+                  await Lang.ask(context);
+                  this.refresh(); 
                   break;
                 default:
               }
