@@ -1,3 +1,4 @@
+import 'package:einthu_stream/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 import 'package:transparent_image/transparent_image.dart';
@@ -63,70 +64,77 @@ class Result {
     final line4 = l4.join(' • ');
 
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              FadeInImage.memoryNetwork(
-                image: this.coverImageUrl,
-                placeholder: kTransparentImage,
-                width: 120,
-                height: 180,
-                fit: BoxFit.cover,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        this.title,
-                        style: TextStyle(fontSize: 24),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                      ),
-                      Text(line2, style: TextStyle(fontSize: 16)),
-                      Text(line3, style: TextStyle(fontSize: 16)),
-                      Text(line4, style: TextStyle(fontSize: 16)),
-                    ],
+      child: InkWell(
+        onTap: () async {
+          await launcher.launch(await Adapter.resolve(this.id));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                FadeInImage.memoryNetwork(
+                  image: this.coverImageUrl,
+                  placeholder: kTransparentImage,
+                  width: 120,
+                  height: 180,
+                  fit: BoxFit.cover,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Text(
+                          this.title,
+                          style: TextStyle(fontSize: 24),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                        ),
+                        Text(line2, style: TextStyle(fontSize: 16)),
+                        Text(line3, style: TextStyle(fontSize: 16)),
+                        Text(line4, style: TextStyle(fontSize: 16)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              PopupMenuButton(
-                itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(
-                        child: Text('Download'),
-                        value: 0,
-                      ),
-                      PopupMenuDivider(),
-                      PopupMenuItem(
-                        child: Text('Watch trailer'),
-                        value: 1,
-                      ),
-                      PopupMenuItem(
-                        child: Text('Visit wiki page'),
-                        value: 2,
-                      ),
-                    ],
-                onSelected: (i) async {
-                  switch (i) {
-                    case 0:
-                      break;
-                    case 1:
-                      await launcher.launch(this.trailer);
-                      break;
-                    case 2:
-                      await launcher.launch(this.wiki);
-                      break;
-                    default:
-                      break;
-                  }
-                },
-              ),
-            ],
+                PopupMenuButton(
+                  itemBuilder: (context) => <PopupMenuEntry>[
+                        PopupMenuItem(
+                          child: Text('Download'),
+                          value: 0,
+                        ),
+                        PopupMenuDivider(),
+                        PopupMenuItem(
+                          child: Text('Watch trailer'),
+                          value: 1,
+                          enabled: this.trailer != null,
+                        ),
+                        PopupMenuItem(
+                          child: Text('Visit wiki page'),
+                          value: 2,
+                          enabled: this.wiki != null,
+                        ),
+                      ],
+                  onSelected: (i) async {
+                    switch (i) {
+                      case 0:
+                        break;
+                      case 1:
+                        await launcher.launch(this.trailer);
+                        break;
+                      case 2:
+                        await launcher.launch(this.wiki);
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
