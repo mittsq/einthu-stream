@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
+import 'package:transparent_image/transparent_image.dart';
 
 class Result {
   String title;
@@ -68,9 +69,12 @@ class Result {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.network(
-                this.coverImageUrl,
+              FadeInImage.memoryNetwork(
+                image: this.coverImageUrl,
+                placeholder: kTransparentImage,
+                width: 120,
                 height: 180,
+                fit: BoxFit.cover,
               ),
               Expanded(
                 child: Padding(
