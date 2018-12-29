@@ -2,6 +2,7 @@ import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen(String q, {Key key}) : super(key: key) {
@@ -24,45 +25,48 @@ class _SearchScreenState extends State<SearchScreen> {
     _controller.text = q;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    refresh();
-  }
-
   void refresh() async {
-    _results = Adapter.search(_query, 'hindi', 1);
+    final prefs = await SharedPreferences.getInstance();
+    _results =
+        Adapter.search(_query, prefs.getString('language') ?? 'hindi', 1);
   }
 
   Widget _buildResults() {
     return FutureBuilder<List<Result>>(
       future: _results,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data.length == 0) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+          case ConnectionState.active:
             return Center(
-              child: Text(
-                'No results',
-                style: TextStyle(fontStyle: FontStyle.italic),
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Center(
+                  child: Text(
+                    'No results',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                );
+              }
+              return ListView(
+                children: snapshot.data.map((i) => i.build()).toList(),
+              );
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.error),
+                  Text('Could not perform search'),
+                ],
               ),
             );
-          }
-          return ListView(
-            children: snapshot.data.map((i) => i.build()).toList(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              children: <Widget>[
-                Icon(Icons.error),
-                Text('Could not perform search'),
-              ],
-            ),
-          );
+          default:
+            return Container();
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
       },
     );
   }
@@ -71,35 +75,28 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_query),
+        title: TextField(
+          textInputAction: TextInputAction.search,
+          decoration: null,
+          // decoration: InputDecoration(
+          //   hintText: 'Search ...',
+          // ),
+          // style: TextStyle(color: Theme.of(context).backgroundColor),
+          autofocus: true,
+          onSubmitted: (text) async {
+            this.setState(() {
+              _query = text;
+              _controller.text = text;
+              refresh();
+            });
+          },
+        ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              final dialog = Dialog(
-                child: Container(
-                  child: TextField(
-                    controller: _controller,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: 'Search ...',
-                      contentPadding: EdgeInsets.all(16),
-                    ),
-                    onSubmitted: (text) async {
-                      this.setState(() {
-                        _query = text;
-                        _controller.text = text;
-                        refresh();
-                        Navigator.pop(context);
-                      });
-                    },
-                  ),
-                ),
-              );
-              showDialog(context: context, builder: (context) => dialog);
-            },
-            tooltip: 'Search',
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.search),
+          //   onPressed: () => ask(),
+          //   tooltip: 'Search',
+          // ),
           IconButton(
             icon: Icon(Icons.cast),
             onPressed: () {},

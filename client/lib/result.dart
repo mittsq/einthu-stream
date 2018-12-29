@@ -51,12 +51,15 @@ class Result {
       }
     }).join(' • ');
 
-    final l3 = <String>[];
-    l3.add(this.rating == 0 ? 'Unrated' : '${this.rating.toString()} ★');
-    l3.add(q);
+    final l3 = <String>[q];
     if (this.hasSubtitles) l3.add('CC');
-    if (this.isPopular) l3.add('Popular');
     final line3 = l3.join(' • ');
+
+    final l4 = <String>[
+      this.rating == 0 ? 'Unrated' : '${this.rating.toString()} ★',
+    ];
+    if (this.isPopular) l4.add('Popular');
+    final line4 = l4.join(' • ');
 
     return Card(
       child: Padding(
@@ -83,6 +86,7 @@ class Result {
                       ),
                       Text(line2, style: TextStyle(fontSize: 16)),
                       Text(line3, style: TextStyle(fontSize: 16)),
+                      Text(line4, style: TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),

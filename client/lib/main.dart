@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:einthu_stream/search.dart';
 
 void main() {
-  debugPaintSizeEnabled = true;
+  // debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 
@@ -65,6 +65,7 @@ class _PopularScreenState extends State<PopularScreen> {
         } else if (snapshot.hasError) {
           return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(Icons.error),
                 Text('Could not load popular movies'),
@@ -87,27 +88,13 @@ class _PopularScreenState extends State<PopularScreen> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-              final dialog = Dialog(
-                child: Container(
-                  child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: 'Search ...',
-                      contentPadding: EdgeInsets.all(16),
-                    ),
-                    onSubmitted: (text) async {
-                      await Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchScreen(text),
-                        ),
-                      );
-                    },
-                  ),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchScreen(null),
                 ),
               );
-              showDialog(context: context, builder: (context) => dialog);
             },
             tooltip: 'Search',
           ),
