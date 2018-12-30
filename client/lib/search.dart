@@ -1,4 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
+import 'package:einthu_stream/main.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -82,40 +83,13 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
         ),
-        actions: <Widget>[
-          // IconButton(
-          //   icon: Icon(Icons.search),
-          //   onPressed: () => ask(),
-          //   tooltip: 'Search',
-          // ),
-          IconButton(
-            icon: Icon(Icons.cast),
-            onPressed: () {},
-            tooltip: 'Chromecast',
-          ),
-          PopupMenuButton(
-            itemBuilder: (context) => <PopupMenuEntry>[
-                  PopupMenuItem(
-                    child: Text('Refresh'),
-                    value: 0,
-                    enabled: false,
-                  ),
-                  // PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: Text('Settings'),
-                    value: 1,
-                  ),
-                ],
-            onSelected: (i) {
-              switch (i) {
-                case 0:
-                  // this.refresh();
-                  break;
-                default:
-              }
-            },
-          ),
-        ],
+        actions: buildActions(
+          context: context,
+          search: false,
+          refresh: () {
+            this.refresh();
+          },
+        ),
       ),
       body: _buildResults(),
     );

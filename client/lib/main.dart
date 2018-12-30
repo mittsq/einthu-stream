@@ -1,4 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
+import 'package:einthu_stream/cast/cast.dart';
 import 'package:einthu_stream/lang.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  MyApp() : super() {
+    CastEngine.initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,44 +95,63 @@ class _PopularScreenState extends State<PopularScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Einthu Stream'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SearchScreen(),
-                ),
-              );
-            },
-            tooltip: 'Search',
-          ),
-          IconButton(
-            icon: Icon(Icons.cast),
-            onPressed: () {},
-            tooltip: 'Chromecast',
-          ),
-          PopupMenuButton(
-            itemBuilder: (context) => <PopupMenuEntry>[
-                  PopupMenuItem(
-                    child: Text('Select language ...'),
-                    value: 0,
-                  ),
-                ],
-            onSelected: (i) async {
-              switch (i) {
-                case 0:
-                  await Lang.ask(context);
-                  this.refresh(); 
-                  break;
-                default:
-              }
-            },
-          ),
-        ],
+        actions: buildActions(
+          context: context,
+          search: true,
+          refresh: () {
+            this.refresh();
+          },
+        ),
       ),
       body: _generate(),
     );
   }
+}
+
+List<Widget> buildActions(
+    {BuildContext context, bool search, Function refresh}) {
+  var list = <Widget>[];
+  if (search) {
+    list.add(IconButton(
+      icon: Icon(Icons.search),
+      onPressed: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SearchScreen(),
+          ),
+        );
+      },
+      tooltip: 'Search',
+    ));
+  }
+  list.addAll(<Widget>[
+    IconButton(
+      icon: Icon(CastEngine.isConnected ? Icons.cast_connected : Icons.cast),
+//            onPressed: () async {
+//              await CastEngine.pickDevice(context);
+//              print(CastEngine.isConnected);
+//              setState(() {});
+//            },
+      tooltip: 'Chromecast',
+    ),
+    PopupMenuButton(
+      itemBuilder: (context) => <PopupMenuEntry>[
+            PopupMenuItem(
+              child: Text('Select language ...'),
+              value: 0,
+            ),
+          ],
+      onSelected: (i) async {
+        switch (i) {
+          case 0:
+            await Lang.ask(context);
+            refresh();
+            break;
+          default:
+        }
+      },
+    ),
+  ]);
+  return list;
 }

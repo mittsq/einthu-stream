@@ -19,6 +19,12 @@ dependencies:
   shared_preferences: ^0.4.3
   url_launcher: ^4.0.3
   chewie: ^0.8.0
+  flutter_mdns_plugin:
+    git: https://github.com/terrabythia/flutter_mdns_plugin.git
+  observable: any
+  dart_chromecast:
+    git: https://github.com/mittsquared/dart_chromecast.git
+  xml: ^3.2.3
 
 dev_dependencies:
 
