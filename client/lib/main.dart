@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:einthu_stream/search.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -19,10 +20,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Einthu Stream',
-      theme: ThemeData.light(),
-      home: PopularScreen(),
+    return DynamicTheme(
+      defaultBrightness: Brightness.dark,
+      data: (brightness) {
+        return ThemeData(
+          primarySwatch: Colors.green,
+          primaryColor: Colors.green.shade900,
+          brightness: brightness,
+        );
+      },
+      themedWidgetBuilder: (context, theme) {
+        return MaterialApp(
+          title: 'Einthu Stream',
+          theme: theme,
+          home: PopularScreen(),
+        );
+      },
     );
   }
 }
@@ -141,12 +154,21 @@ List<Widget> buildActions(
               child: Text('Select language ...'),
               value: 0,
             ),
+            PopupMenuItem(
+              child: Text('Switch theme'),
+              value: 1,
+            ),
           ],
       onSelected: (i) async {
         switch (i) {
           case 0:
-            await Lang.ask(context);
-            refresh();
+            if (await Lang.ask(context)) refresh();
+            break;
+          case 1:
+            DynamicTheme.of(context).setBrightness(
+                Theme.of(context).brightness == Brightness.dark
+                    ? Brightness.light
+                    : Brightness.dark);
             break;
           default:
         }

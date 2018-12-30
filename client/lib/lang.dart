@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Lang {
   Lang._();
 
-  static Future ask(BuildContext context) async {
+  static Future<bool> ask(BuildContext context) async {
     final choice = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -48,9 +48,11 @@ class Lang {
       }
     );
 
-    if (choice != null) {
-      final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
+    if (choice != null && prefs.getString('language') != choice) {
       prefs.setString('language', choice);
+      return true;
     }
+    return false;
   }
 }
