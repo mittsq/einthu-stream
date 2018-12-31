@@ -1,7 +1,9 @@
+import 'package:einthu_stream/about.dart';
 import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/cast/cast.dart';
 import 'package:einthu_stream/lang.dart';
 import 'package:einthu_stream/result.dart';
+import 'package:einthu_stream/updater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,8 +26,9 @@ class MyApp extends StatelessWidget {
       defaultBrightness: Brightness.dark,
       data: (brightness) {
         return ThemeData(
-          primarySwatch: Colors.green,
           primaryColor: Colors.green.shade900,
+          accentColor: Colors.green.shade50,
+          cursorColor: Colors.green.shade50,
           brightness: brightness,
         );
       },
@@ -54,6 +57,9 @@ class _PopularScreenState extends State<PopularScreen> {
   void initState() {
     super.initState();
     refresh();
+    Future.delayed(Duration.zero, () {
+      Updater.update(context);
+    });
   }
 
   void refresh() async {
@@ -107,10 +113,28 @@ class _PopularScreenState extends State<PopularScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Einthu Stream'),
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'icomoon',
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(),
+                fullscreenDialog: true,
+              ),
+            );
+          },
+          tooltip: 'Search',
+        ),
         actions: buildActions(
           context: context,
-          search: true,
           refresh: () {
             this.refresh();
           },
@@ -121,24 +145,8 @@ class _PopularScreenState extends State<PopularScreen> {
   }
 }
 
-List<Widget> buildActions(
-    {BuildContext context, bool search, Function refresh}) {
-  var list = <Widget>[];
-  if (search) {
-    list.add(IconButton(
-      icon: Icon(Icons.search),
-      onPressed: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SearchScreen(),
-          ),
-        );
-      },
-      tooltip: 'Search',
-    ));
-  }
-  list.addAll(<Widget>[
+List<Widget> buildActions({BuildContext context, Function refresh}) {
+  return <Widget>[
     IconButton(
       icon: Icon(CastEngine.isConnected ? Icons.cast_connected : Icons.cast),
 //            onPressed: () async {
@@ -158,6 +166,11 @@ List<Widget> buildActions(
               child: Text('Switch theme'),
               value: 1,
             ),
+            PopupMenuDivider(),
+            PopupMenuItem(
+              child: Text('About'),
+              value: 2,
+            ),
           ],
       onSelected: (i) async {
         switch (i) {
@@ -170,10 +183,15 @@ List<Widget> buildActions(
                     ? Brightness.light
                     : Brightness.dark);
             break;
+          case 2:
+            await showDialog(
+              context: context,
+              builder: (context) => Dialog(child: AboutScreen.buildDialog(context)),
+            );
+            break;
           default:
         }
       },
     ),
-  ]);
-  return list;
+  ];
 }

@@ -83,13 +83,13 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
         ),
-        actions: buildActions(
-          context: context,
-          search: false,
-          refresh: () {
-            this.refresh();
-          },
-        ),
+//        actions: buildActions(
+//          context: context,
+//          search: false,
+//          refresh: () {
+//            this.refresh();
+//          },
+//        ),
       ),
       body: _buildResults(),
     );
