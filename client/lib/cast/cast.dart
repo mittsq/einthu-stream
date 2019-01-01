@@ -34,7 +34,8 @@ class CastEngine {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Native casting is coming soon! Use a third-party caster in the meantime.'),
+          'Native casting is coming soon! Use a third-party caster in the meantime.',
+        ),
       ),
     );
     return;

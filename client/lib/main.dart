@@ -147,15 +147,15 @@ class _PopularScreenState extends State<PopularScreen> {
 
 List<Widget> buildActions({BuildContext context, Function refresh}) {
   return <Widget>[
-    IconButton(
-      icon: Icon(CastEngine.isConnected ? Icons.cast_connected : Icons.cast),
-//            onPressed: () async {
-//              await CastEngine.pickDevice(context);
-//              print(CastEngine.isConnected);
-//              setState(() {});
-//            },
-      tooltip: 'Chromecast',
-    ),
+//     IconButton(
+//       icon: Icon(CastEngine.isConnected ? Icons.cast_connected : Icons.cast),
+// //            onPressed: () async {
+// //              await CastEngine.pickDevice(context);
+// //              print(CastEngine.isConnected);
+// //              setState(() {});
+// //            },
+//       tooltip: 'Chromecast',
+//     ),
     PopupMenuButton(
       itemBuilder: (context) => <PopupMenuEntry>[
             PopupMenuItem(

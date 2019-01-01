@@ -1,4 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
+import 'package:einthu_stream/details.dart';
 import 'package:einthu_stream/player.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
@@ -66,10 +67,16 @@ class Result {
     return Card(
       child: InkWell(
         onTap: () async {
-          final url = await Adapter.resolve(this.id);
-          await launcher.launch(url);
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => PlayerScreen(movie: this)));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              // fullscreenDialog: true,
+              builder: (context) => DetailScreen(movie: this),
+            ),
+          );
+
+          // final url = await Adapter.resolve(this.id);
+          // await launcher.launch(url);
         },
         child: Padding(
           padding: const EdgeInsets.all(8),
@@ -77,12 +84,10 @@ class Result {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                FadeInImage.assetNetwork(
-                  image: this.coverImageUrl,
-                  placeholder: 'assets/placeholder.png',
+                CoverHero(
+                  movie: this,
                   width: 120,
                   height: 180,
-                  fit: BoxFit.cover,
                 ),
                 Expanded(
                   child: Padding(
@@ -210,5 +215,27 @@ class Professionals {
     data['role'] = this.role;
     data['avatar'] = this.avatar;
     return data;
+  }
+}
+
+class CoverHero extends StatelessWidget {
+  CoverHero({Key key, this.movie, this.width, this.height}) : super(key: key);
+
+  final Result movie;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: movie.id,
+      child: FadeInImage.assetNetwork(
+        image: movie.coverImageUrl,
+        placeholder: 'assets/placeholder.png',
+        width: this.width,
+        height: this.height,
+        fit: BoxFit.cover,
+      ),
+    );
   }
 }
