@@ -14,7 +14,7 @@ namespace EinthuStream.Controllers {
     public class SearchController : ControllerBase {
         private IMemoryCache _cache;
         // private ILogger _logger;
-        public SearchController(IMemoryCache cache/* , ILogger logger */) {
+        public SearchController(IMemoryCache cache /* , ILogger logger */ ) {
             _cache = cache;
             // _logger = logger;
         }
@@ -32,7 +32,11 @@ namespace EinthuStream.Controllers {
 
                 var getReq = new RestRequest($"/movie/results/?lang={language}&page={page}&query={query}");
                 var doc = await Requester.GetDocumentAsync(getReq);
-                return doc.QuerySelectorAll("#UIMovieSummary > ul > li").Select(_ => Scraper.ScrapeAsync(_)).ToArray();
+                return doc.QuerySelectorAll("#UIMovieSummary > ul > li").Select(_ => {
+                    var r = Scraper.ScrapeAsync(_);
+                    if (r.Description != null) _cache.Set(new { Id = r.Id }, r.Description);
+                    return r;
+                }).ToArray();
             });
         }
     }
@@ -42,7 +46,7 @@ namespace EinthuStream.Controllers {
     public class PopularController : ControllerBase {
         private IMemoryCache _cache;
         // private ILogger _logger;
-        public PopularController(IMemoryCache cache/* , ILogger logger */) {
+        public PopularController(IMemoryCache cache /* , ILogger logger */ ) {
             _cache = cache;
             // _logger = logger;
         }
@@ -58,8 +62,37 @@ namespace EinthuStream.Controllers {
 
                 var getReq = new RestRequest($"/movie/browse/?lang={language}");
                 var doc = await Requester.GetDocumentAsync(getReq);
-                return doc.QuerySelectorAll("#UIFeaturedFilms div.tabview").Select(_ => Scraper.ScrapePopularAsync(_)).ToArray();
+                return doc.QuerySelectorAll("#UIFeaturedFilms div.tabview").Select(_ => {
+                    var r = Scraper.ScrapePopularAsync(_);
+                    if (r.Description != null) _cache.Set(new { Id = r.Id }, r.Description);
+                    return r;
+                }).ToArray();
             });
+        }
+    }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DescController : ControllerBase {
+        private IMemoryCache _cache;
+        // private ILogger _logger;
+        public DescController(IMemoryCache cache /* , ILogger logger */ ) {
+            _cache = cache;
+            // _logger = logger;
+        }
+
+        [HttpGet]
+        public async Task<string> GetAsync([FromQuery] string id) {
+            var key = new { Id = id };
+            var cached = _cache.Get<string>(key);
+            if (cached == null) {
+                var getReq = new RestRequest($"https://einthusan.tv/movie/watch/{id}/");
+                var doc = await Requester.GetDocumentAsync(getReq);
+                var refresh = Scraper.ScrapeAsync(doc.QuerySelector("#UIMovieSummary > ul > li"));
+                _cache.Set(key, refresh.Description);
+                return refresh.Description;
+            }
+            return cached;
         }
     }
 }

@@ -10,7 +10,7 @@ class Result {
   int year;
   List<String> qualities;
   bool hasSubtitles;
-  String description;
+  String _description;
   double rating;
   String language;
   bool isPopular;
@@ -26,7 +26,6 @@ class Result {
       this.year,
       this.qualities,
       this.hasSubtitles,
-      this.description,
       this.rating,
       this.language,
       this.isPopular,
@@ -35,6 +34,18 @@ class Result {
       this.trailer,
       this.professionals,
       this.id});
+
+  void setDescription(String d) {
+    this._description = d;
+  }
+
+  Future<String> get description async {
+    if (this._description == null) {
+      final d = await Adapter.describe(this.id);
+      this._description = d;
+    }
+    return this._description;
+  }
 
   Widget build(BuildContext context) {
     final line2 = <String>[
@@ -155,7 +166,7 @@ class Result {
     year = json['year'];
     qualities = json['qualities'].cast<String>();
     hasSubtitles = json['hasSubtitles'];
-    description = json['description'];
+    _description = json['description'];
     rating = json['rating'];
     language = json['language'];
     isPopular = json['isPopular'];
@@ -178,7 +189,7 @@ class Result {
     data['year'] = this.year;
     data['qualities'] = this.qualities;
     data['hasSubtitles'] = this.hasSubtitles;
-    data['description'] = this.description;
+    data['description'] = this._description;
     data['rating'] = this.rating;
     data['language'] = this.language;
     data['isPopular'] = this.isPopular;

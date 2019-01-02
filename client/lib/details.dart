@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class DetailScreen extends StatefulWidget {
   DetailScreen({this.movie});
+
   final Result movie;
 
   @override
@@ -15,6 +16,13 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   Widget _icon = Icon(Icons.play_arrow);
   bool _isResolving = false;
+  Future<String> _desc;
+
+  @override
+  void initState() {
+    super.initState();
+    _desc = widget.movie.description;
+  }
 
   Future<String> _getUrl() async {
     return Adapter.resolve(widget.movie.id);
@@ -100,20 +108,38 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: TextStyle(fontSize: 18),
               ),
             ),
-            Text(widget.movie.description ?? 'Could not load description'),
             Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text('Action'),
-                  Text('Comedy'),
-                  Text('Romance'),
-                  Text('Story'),
-                  Text('Acting'),
-                ],
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: FutureBuilder(
+                future: _desc,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.done:
+                      if (snapshot.hasError)
+                        return Text('Could not load description ...');
+                      return Text(snapshot.data, textAlign: TextAlign.justify);
+                    case ConnectionState.active:
+                    case ConnectionState.waiting:
+                      return Text('Loading description ...');
+                    default:
+                      return Text('');
+                  }
+                },
               ),
             ),
+//            Padding(
+//              padding: EdgeInsets.all(8),
+//              child: Column(
+//                crossAxisAlignment: CrossAxisAlignment.stretch,
+//                children: <Widget>[
+//                  Text('Action'),
+//                  Text('Comedy'),
+//                  Text('Romance'),
+//                  Text('Story'),
+//                  Text('Acting'),
+//                ],
+//              ),
+//            ),
             Text(
               'Starring ...',
               style: TextStyle(fontSize: 18),
