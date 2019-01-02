@@ -15,6 +15,8 @@ namespace EinthuStream.Controllers {
     public class ResolveController : ControllerBase {
         [HttpGet]
         public async Task<string> Get([FromQuery] string id) {
+            if (id == null) throw new ArgumentNullException("id", "Cannot resolve a null id");
+
             return await Resolver.Resolve(id);
         }
 
