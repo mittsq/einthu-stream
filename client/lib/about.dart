@@ -53,6 +53,12 @@ class AboutScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
+            // FlatButton(
+            //   child: Text('UPDATE'),
+            //   onPressed: () async {
+            //     await Updater.update(context);
+            //   },
+            // ),
           ],
         )
       ],

@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart' as path;
+import 'package:simple_permissions/simple_permissions.dart';
 
 class Updater {
   Updater._();
@@ -11,6 +14,7 @@ class Updater {
   static final String url =
       "https://api.github.com/repos/mittsquared/einthu-stream/releases/latest";
   static String version;
+  static const platform = const MethodChannel('me.basak.einthustream/apk');
 
   static Future update(BuildContext context) async {
     if (version == null) version = (await PackageInfo.fromPlatform()).version;
@@ -20,7 +24,7 @@ class Updater {
 
     final json = jsonDecode(response.body);
 
-    final name = json['name'] as String;
+    final name = json['tag_name'] as String;
     final remote = splitVersion(name);
     final local = splitVersion(version);
     for (var i = 0; i < 3; ++i) {
@@ -52,17 +56,29 @@ class Updater {
           },
         );
         if (response) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Downloading update ...'),
-            ),
-          );
+          // Scaffold.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Downloading update ...'),
+          //   ),
+          // );
           final apk = (json['assets'] as List)[0]['browser_download_url'];
+          final perm = await SimplePermissions.requestPermission(
+              Permission.WriteExternalStorage);
+          if (perm != PermissionStatus.authorized) return;
           final bytes = (await http.get(apk)).bodyBytes;
-          final file = File('/sdcard/Download/einthu-stream-$name.apk');
+          final ext = (await path.getExternalStorageDirectory()).path;
+          final dir = await Directory('$ext/Download/einthu-stream/updates')
+              .create(recursive: true);
+          await dir
+              .list()
+              .where((file) => file.path.endsWith('.apk'))
+              .forEach((file) => file.delete());
+          final file = File('${dir.path}/update-$name.apk');
           await file.writeAsBytes(bytes);
-          await launcher.launch(file.path);
+//          await launcher.launch(file.path);
+          await platform.invokeMethod('installApk', {'path': '${file.path}'});
         }
+        break;
       }
     }
   }

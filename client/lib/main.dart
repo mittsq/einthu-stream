@@ -57,8 +57,8 @@ class _PopularScreenState extends State<PopularScreen> {
   void initState() {
     super.initState();
     refresh();
-    Future.delayed(Duration.zero, () {
-      Updater.update(context);
+    Future.delayed(Duration.zero, () async {
+      await Updater.update(context);
     });
   }
 

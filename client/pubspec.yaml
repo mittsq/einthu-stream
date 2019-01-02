@@ -27,6 +27,8 @@ dependencies:
   xml: ^3.2.3
   dynamic_theme: ^1.0.0
   package_info: ^0.3.2
+  path_provider: ^0.4.1
+  simple_permissions: ^0.1.9
 
 dev_dependencies:
   flutter_launcher_icons: ^0.7.0
