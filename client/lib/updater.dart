@@ -8,6 +8,8 @@ import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:simple_permissions/simple_permissions.dart';
 
+import 'main.dart';
+
 class Updater {
   Updater._();
 
@@ -56,15 +58,18 @@ class Updater {
           },
         );
         if (response) {
-          // Scaffold.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('Downloading update ...'),
-          //   ),
-          // );
+          MyApp.scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text('Downloading update ...'),
+          ));
           final apk = (json['assets'] as List)[0]['browser_download_url'];
           final perm = await SimplePermissions.requestPermission(
               Permission.WriteExternalStorage);
-          if (perm != PermissionStatus.authorized) return;
+          if (perm != PermissionStatus.authorized) {
+            MyApp.scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('Permission denied'),
+            ));
+            return;
+          }
           final bytes = (await http.get(apk)).bodyBytes;
           final ext = (await path.getExternalStorageDirectory()).path;
           final dir = await Directory('$ext/Download/einthu-stream/updates')
@@ -75,12 +80,15 @@ class Updater {
               .forEach((file) => file.delete());
           final file = File('${dir.path}/update-$name.apk');
           await file.writeAsBytes(bytes);
-//          await launcher.launch(file.path);
+          // await launcher.launch(file.path);
           await platform.invokeMethod('installApk', {'path': '${file.path}'});
         }
-        break;
+        return;
       }
     }
+    MyApp.scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text('Up to date'),
+    ));
   }
 
   static List<int> splitVersion(String v) =>

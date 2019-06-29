@@ -17,6 +17,8 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp() : super();
 
+  static final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return DynamicTheme(
@@ -109,6 +111,7 @@ class _PopularScreenState extends State<PopularScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: MyApp.scaffoldKey,
       appBar: AppBar(
         title: Text(
           '',
