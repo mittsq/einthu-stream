@@ -1,5 +1,4 @@
 import 'package:einthu_stream/adapter.dart';
-import 'package:einthu_stream/main.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
@@ -35,9 +34,7 @@ class _DetailScreenState extends State<DetailScreen> {
         centerTitle: true,
         title: Text(widget.movie.title),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.cast),
-          ),
+          // IconButton(icon: Icon(Icons.cast)),
           PopupMenuButton(
             itemBuilder: (context) => <PopupMenuEntry>[
                   PopupMenuItem(
@@ -127,19 +124,19 @@ class _DetailScreenState extends State<DetailScreen> {
                 },
               ),
             ),
-//            Padding(
-//              padding: EdgeInsets.all(8),
-//              child: Column(
-//                crossAxisAlignment: CrossAxisAlignment.stretch,
-//                children: <Widget>[
-//                  Text('Action'),
-//                  Text('Comedy'),
-//                  Text('Romance'),
-//                  Text('Story'),
-//                  Text('Acting'),
-//                ],
-//              ),
-//            ),
+            //            Padding(
+            //              padding: EdgeInsets.all(8),
+            //              child: Column(
+            //                crossAxisAlignment: CrossAxisAlignment.stretch,
+            //                children: <Widget>[
+            //                  Text('Action'),
+            //                  Text('Comedy'),
+            //                  Text('Romance'),
+            //                  Text('Story'),
+            //                  Text('Acting'),
+            //                ],
+            //              ),
+            //            ),
             Text(
               'Starring ...',
               style: TextStyle(fontSize: 18),

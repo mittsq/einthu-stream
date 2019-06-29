@@ -1,14 +1,13 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:einthu_stream/about.dart';
 import 'package:einthu_stream/adapter.dart';
-import 'package:einthu_stream/cast/cast.dart';
 import 'package:einthu_stream/lang.dart';
 import 'package:einthu_stream/result.dart';
+import 'package:einthu_stream/search.dart';
 import 'package:einthu_stream/updater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:einthu_stream/search.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -16,9 +15,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp() : super() {
-    CastEngine.initialize();
-  }
+  MyApp() : super();
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +183,8 @@ List<Widget> buildActions({BuildContext context, Function refresh}) {
           case 2:
             await showDialog(
               context: context,
-              builder: (context) => Dialog(child: AboutScreen.buildDialog(context)),
+              builder: (context) =>
+                  Dialog(child: AboutScreen.buildDialog(context)),
             );
             break;
           default:

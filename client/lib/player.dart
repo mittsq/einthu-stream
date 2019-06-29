@@ -1,9 +1,9 @@
+import 'package:chewie/chewie.dart';
 import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
+
 // import 'package:video_player/video_player.dart';
 // import 'package:screen/screen.dart';
 
@@ -18,9 +18,11 @@ class PlayerScreen extends StatefulWidget {
 
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState({this.movie});
+
   Result movie;
   Future<String> _url;
   VideoPlayerController _controller;
+
   // bool _showControls = true;
 
   @override
@@ -88,80 +90,80 @@ class _PlayerScreenState extends State<PlayerScreen> {
     _controller.dispose();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   final bar = AppBar(
-  //     backgroundColor: Colors.transparent,
-  //   );
+// @override
+// Widget build(BuildContext context) {
+//   final bar = AppBar(
+//     backgroundColor: Colors.transparent,
+//   );
 
-  //   //_controller.value.isPlaying
-  //   // ? _controller.pause()
-  //   // : _controller.play();
+//   //_controller.value.isPlaying
+//   // ? _controller.pause()
+//   // : _controller.play();
 
-  //   final stack = <Widget>[
-  //     GestureDetector(
-  //       onTap: () {
-  //         setState(() {
-  //           _showControls = !_showControls;
-  //         });
-  //       },
-  //       child: _controller != null && _controller.value.initialized
-  //           ? /* FittedBox(
-  //               fit: BoxFit.cover,
-  //               alignment: Alignment.center,
-  //               child: AspectRatio(
-  //                 aspectRatio: _controller.value.aspectRatio,
-  //               child: */
-  //           VideoPlayer(_controller) //,
-  //           // ),
-  //           // )
-  //           : Center(child: CircularProgressIndicator()),
-  //     ),
-  //   ];
+//   final stack = <Widget>[
+//     GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           _showControls = !_showControls;
+//         });
+//       },
+//       child: _controller != null && _controller.value.initialized
+//           ? /* FittedBox(
+//               fit: BoxFit.cover,
+//               alignment: Alignment.center,
+//               child: AspectRatio(
+//                 aspectRatio: _controller.value.aspectRatio,
+//               child: */
+//           VideoPlayer(_controller) //,
+//           // ),
+//           // )
+//           : Center(child: CircularProgressIndicator()),
+//     ),
+//   ];
 
-  //   if (_showControls) {
-  //     // SystemChrome.setEnabledSystemUIOverlays(
-  //     //     <SystemUiOverlay>[SystemUiOverlay.top]);
+//   if (_showControls) {
+//     // SystemChrome.setEnabledSystemUIOverlays(
+//     //     <SystemUiOverlay>[SystemUiOverlay.top]);
 
-  //     stack.add(Column(
-  //       children: <Widget>[
-  //         Container(
-  //           height: bar.preferredSize.height,
-  //           child: bar,
-  //         ),
-  //         Expanded(
-  //           child: Container(),
-  //         ),
-  //         Container(
-  //           height: bar.preferredSize.height,
-  //           child: Row(
-  //             children: <Widget>[
-  //               IconButton(
-  //                 icon: Icon(_controller != null && _controller.value.isPlaying
-  //                     ? Icons.pause
-  //                     : Icons.play_arrow),
-  //                 onPressed: () {
-  //                   setState(() {
-  //                     _controller.value.isPlaying
-  //                         ? _controller.pause()
-  //                         : _controller.play();
-  //                   });
-  //                 },
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ));
-  //   }
+//     stack.add(Column(
+//       children: <Widget>[
+//         Container(
+//           height: bar.preferredSize.height,
+//           child: bar,
+//         ),
+//         Expanded(
+//           child: Container(),
+//         ),
+//         Container(
+//           height: bar.preferredSize.height,
+//           child: Row(
+//             children: <Widget>[
+//               IconButton(
+//                 icon: Icon(_controller != null && _controller.value.isPlaying
+//                     ? Icons.pause
+//                     : Icons.play_arrow),
+//                 onPressed: () {
+//                   setState(() {
+//                     _controller.value.isPlaying
+//                         ? _controller.pause()
+//                         : _controller.play();
+//                   });
+//                 },
+//               )
+//             ],
+//           ),
+//         ),
+//       ],
+//     ));
+//   }
 
-  //   return Theme(
-  //     data: ThemeData.dark(),
-  //     child: Scaffold(
-  //       body: Stack(
-  //         children: stack,
-  //       ),
-  //     ),
-  //   );
-  // }
+//   return Theme(
+//     data: ThemeData.dark(),
+//     child: Scaffold(
+//       body: Stack(
+//         children: stack,
+//       ),
+//     ),
+//   );
+// }
 }
