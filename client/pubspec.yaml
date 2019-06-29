@@ -23,7 +23,7 @@ dependencies:
     git: https://github.com/terrabythia/flutter_mdns_plugin.git
   observable: any
   dart_chromecast:
-    git: https://github.com/mittsquared/dart_chromecast.git
+    git: https://github.com/terrabythia/dart_chromecast.git
   xml: ^3.2.3
   dynamic_theme: ^1.0.0
   package_info: ^0.3.2
