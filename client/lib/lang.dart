@@ -4,62 +4,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Lang {
   Lang._();
 
+  static Map<String, String> languages = {
+    'hindi': 'Hindi\nहिंदी',
+    'tamil': 'Tamil\nதமிழ்',
+    'telegu': 'Telugu\nతెలుగు',
+    'bengali': 'Bengali\nবাংলা',
+    'malayalam': 'Malayalam\nമലയാളം',
+    'kannada': 'Kannada\nಕನ್ನಡ',
+    'marathi': 'Marathi\nमराठी',
+    'punjabi': 'Punjabi\nਪੰਜਾਬੀ / پنجابی',
+  };
+
   static Future<bool> ask(BuildContext context) async {
+    var list = <Widget>[];
+    languages.forEach((k, v) => list.add(SimpleDialogOption(
+          child: Text(v),
+          onPressed: () => Navigator.pop(context, k),
+        )));
+
     final choice = await showDialog<String>(
         context: context,
         builder: (context) {
           return SimpleDialog(
             title: Text('Select a language ...'),
-            children: <Widget>[
-              SimpleDialogOption(
-                child: Text('Hindi'),
-                onPressed: () {
-                  Navigator.pop(context, 'hindi');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Tamil'),
-                onPressed: () {
-                  Navigator.pop(context, 'tamil');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Telugu'),
-                onPressed: () {
-                  Navigator.pop(context, 'telugu');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Bengali'),
-                onPressed: () {
-                  Navigator.pop(context, 'bengali');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Malayalam'),
-                onPressed: () {
-                  Navigator.pop(context, 'malayalam');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Kannada'),
-                onPressed: () {
-                  Navigator.pop(context, 'kannada');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Marathi'),
-                onPressed: () {
-                  Navigator.pop(context, 'marathi');
-                },
-              ),
-              SimpleDialogOption(
-                child: Text('Punjabi'),
-                onPressed: () {
-                  Navigator.pop(context, 'punjabi');
-                },
-              ),
-            ],
+            children: list,
           );
         });
 
