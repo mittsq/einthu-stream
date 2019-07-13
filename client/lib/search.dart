@@ -1,5 +1,4 @@
 import 'package:einthu_stream/adapter.dart';
-import 'package:einthu_stream/main.dart';
 import 'package:einthu_stream/result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
           // decoration: InputDecoration(
           //   hintText: 'Search ...',
           // ),
-          // style: TextStyle(color: Theme.of(context).backgroundColor),
+          style: TextStyle(color: Theme.of(context).cursorColor),
           autofocus: true,
           onSubmitted: (text) async {
             this.setState(() {

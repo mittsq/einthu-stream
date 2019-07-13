@@ -1,6 +1,5 @@
 import 'package:einthu_stream/adapter.dart';
 import 'package:einthu_stream/details.dart';
-import 'package:einthu_stream/player.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 
@@ -140,6 +139,9 @@ class Result {
                   onSelected: (i) async {
                     switch (i) {
                       case 0:
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("Downloads coming soon ..."),
+                        ));
                         break;
                       case 1:
                         await launcher.launch(this.trailer);

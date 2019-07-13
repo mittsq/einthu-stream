@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:einthu_stream/result.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 /// Interface with einthu-stream REST api
 class Adapter {
   Adapter._();
 
   static const String _base = 'https://einthu-stream.herokuapp.com/api';
+
 //  static const String _base = 'http://192.168.0.119:5000/api';
 
   /// Retrieves the popular movies for a given [lang].
