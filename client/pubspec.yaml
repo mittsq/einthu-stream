@@ -1,16 +1,9 @@
 name: einthu_stream
 description: Client for watching, downloading, and casting movies from Einthusan.
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# Read more about versioning at semver.org.
-version: 1.1.0
+version: 1.2.0
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -23,7 +16,7 @@ dependencies:
     git: https://github.com/terrabythia/flutter_mdns_plugin.git
   observable: any
   dart_chromecast:
-    git: https://github.com/mittsquared/dart_chromecast.git
+    git: https://github.com/terrabythia/dart_chromecast.git
   xml: ^3.2.3
   dynamic_theme: ^1.0.0
   package_info: ^0.3.2
@@ -40,15 +33,7 @@ flutter_icons:
 #  adaptive_icon_foreground: "assets/e.png"
 #  adaptive_icon_background: "#ffffff"
 
-# For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
   assets:

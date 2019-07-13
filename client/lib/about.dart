@@ -24,7 +24,7 @@ class AboutScreen extends StatelessWidget {
         Text('Version ${Updater.version}'),
         Text(
           '\nA client for Einthusan with casting and downloads.\n'
-              'Made with ♥ using Flutter.',
+          'Made with ♥ using Flutter.',
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
@@ -49,16 +49,18 @@ class AboutScreen extends StatelessWidget {
             FlatButton(
               child: Text('GITHUB'),
               onPressed: () async {
-                await launcher.launch('https://github.com/mittsquared/einthu-stream');
+                await launcher
+                    .launch('https://github.com/mittsquared/einthu-stream');
                 Navigator.pop(context);
               },
             ),
-            // FlatButton(
-            //   child: Text('UPDATE'),
-            //   onPressed: () async {
-            //     await Updater.update(context);
-            //   },
-            // ),
+            FlatButton(
+              child: Text('UPDATE'),
+              onPressed: () async {
+                await Updater.update(context);
+                Navigator.pop(context);
+              },
+            ),
           ],
         )
       ],
