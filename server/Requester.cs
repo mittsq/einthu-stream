@@ -12,7 +12,7 @@ namespace EinthuStream {
     private static RestClient Client =>
       _client ?? (_client = new RestClient {
         CookieContainer = new CookieContainer(),
-        BaseUrl = new Uri("https://einthusan.com"),
+        BaseUrl = new Uri("https://einthusan.ca"),
         UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0"
       });
 
