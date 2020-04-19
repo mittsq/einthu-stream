@@ -9,7 +9,7 @@ namespace EinthuStream {
     private static string NormalizeLink(string link) {
       if (link == null) return null;
       if (link.StartsWith("//")) return $"https:{link}";
-      if (link.StartsWith("/")) return $"https://einthusan.ca{link}";
+      if (link.StartsWith("/")) return $"https://einthusan.tv{link}";
       return link;
     }
 

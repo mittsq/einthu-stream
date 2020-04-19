@@ -80,7 +80,7 @@ namespace EinthuStream.Controllers {
       var key = new { Id = id };
       var cached = _cache.Get<string>(key);
       if (cached != null) return cached;
-      var getReq = new RestRequest($"https://einthusan.ca/movie/watch/{id}/");
+      var getReq = new RestRequest($"https://einthusan.tv/movie/watch/{id}/");
       var doc = await Requester.GetDocumentAsync(getReq);
       var refresh = Scraper.ScrapeAsync(doc.QuerySelector("#UIMovieSummary > ul > li"));
       _cache.Set(key, refresh.Description);
