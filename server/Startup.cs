@@ -16,7 +16,8 @@ namespace EinthuStream {
       services.AddResponseCompression()
         .AddMemoryCache()
         .AddMvc()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        .AddMvcOptions(options => options.EnableEndpointRouting = false)
+        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
     }
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env) {

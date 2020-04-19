@@ -22,7 +22,7 @@ namespace EinthuStream.Controllers {
 
       var key = new { Query = query, Language = language, Page = page };
 
-      return await _cache.GetOrCreateAsync(key, async entry => {
+      return await _cache.GetOrCreateAsync<Result[]>(key, async entry => {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3);
         // _logger.LogInformation("Caching new value for page {PAGE} of search {QUERY} in {LANG}", page, query, language);
         Console.WriteLine("Caching new value for page {0} of search {1} in {2}", page, query, language);
@@ -51,7 +51,7 @@ namespace EinthuStream.Controllers {
     public async Task<Result[]> GetAsync([FromQuery] string language = "hindi") {
       var key = new { Language = language };
 
-      return await _cache.GetOrCreateAsync(key, async entry => {
+      return await _cache.GetOrCreateAsync<Result[]>(key, async entry => {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3);
         Console.WriteLine("Caching new value for popular in {0}", language);
 

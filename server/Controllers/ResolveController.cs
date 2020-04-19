@@ -25,8 +25,8 @@ namespace EinthuStream.Controllers {
 
       private static async Task<string[]> GetResultPage(string id) {
         var doc = await Requester.GetDocumentAsync(new RestRequest("/movie/watch/" + id));
-        var pageId = doc.GetElementsByTagName("html")[0].GetAttribute("data-pageid");
-        var pingables = doc.GetElementById("UIVideoPlayer").GetAttribute("data-ejpingables");
+        var pageId = doc.GetElementsByTagName("html")[0].GetAttribute("data-pageid") as string;
+        var pingables = doc.GetElementById("UIVideoPlayer").GetAttribute("data-ejpingables") as string;
 
         return new[] { pageId, pingables };
       }
