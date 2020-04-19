@@ -22,7 +22,7 @@ namespace EinthuStream.Controllers {
 
       var key = new { Query = query, Language = language, Page = page };
 
-      return await _cache.GetOrCreateAsync<Result[]>(key, async entry => {
+      return await _cache.GetOrCreateAsync(key, async entry => {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3);
         // _logger.LogInformation("Caching new value for page {PAGE} of search {QUERY} in {LANG}", page, query, language);
         Console.WriteLine("Caching new value for page {0} of search {1} in {2}", page, query, language);
@@ -31,7 +31,7 @@ namespace EinthuStream.Controllers {
         var doc = await Requester.GetDocumentAsync(getReq);
         return doc.QuerySelectorAll("#UIMovieSummary > ul > li").Select(_ => {
           var r = Scraper.ScrapeAsync(_);
-          if (r.Description != null) _cache.Set(new { Id = r.Id }, r.Description);
+          if (r.Description != null) _cache.Set(new { r.Id }, r.Description);
           return r;
         }).ToArray();
       });
@@ -41,7 +41,7 @@ namespace EinthuStream.Controllers {
   [Route("api/[controller]")]
   [ApiController]
   public class PopularController : ControllerBase {
-    private IMemoryCache _cache;
+    private readonly IMemoryCache _cache;
 
     public PopularController(IMemoryCache cache) {
       _cache = cache;
@@ -51,7 +51,7 @@ namespace EinthuStream.Controllers {
     public async Task<Result[]> GetAsync([FromQuery] string language = "hindi") {
       var key = new { Language = language };
 
-      return await _cache.GetOrCreateAsync<Result[]>(key, async entry => {
+      return await _cache.GetOrCreateAsync(key, async entry => {
         entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3);
         Console.WriteLine("Caching new value for popular in {0}", language);
 
@@ -59,7 +59,7 @@ namespace EinthuStream.Controllers {
         var doc = await Requester.GetDocumentAsync(getReq);
         return doc.QuerySelectorAll("#UIFeaturedFilms div.tabview").Select(_ => {
           var r = Scraper.ScrapePopularAsync(_);
-          if (r.Description != null) _cache.Set(new { Id = r.Id }, r.Description);
+          if (r.Description != null) _cache.Set(new { r.Id }, r.Description);
           return r;
         }).ToArray();
       });
@@ -69,7 +69,7 @@ namespace EinthuStream.Controllers {
   [Route("api/[controller]")]
   [ApiController]
   public class DescController : ControllerBase {
-    private IMemoryCache _cache;
+    private readonly IMemoryCache _cache;
 
     public DescController(IMemoryCache cache) {
       _cache = cache;

@@ -25,8 +25,8 @@ namespace EinthuStream.Controllers {
 
       private static async Task<string[]> GetResultPage(string id) {
         var doc = await Requester.GetDocumentAsync(new RestRequest("/movie/watch/" + id));
-        var pageId = doc.GetElementsByTagName("html")[0].GetAttribute("data-pageid") as string;
-        var pingables = doc.GetElementById("UIVideoPlayer").GetAttribute("data-ejpingables") as string;
+        var pageId = doc.GetElementsByTagName("html")[0].GetAttribute("data-pageid");
+        var pingables = doc.GetElementById("UIVideoPlayer").GetAttribute("data-ejpingables");
 
         return new[] { pageId, pingables };
       }
@@ -40,14 +40,14 @@ namespace EinthuStream.Controllers {
         postReq.AddParameter("gorilla.csrf.Token", data[0]);
 
         var json = JObject.Parse(await Requester.GetContentAsync(postReq));
-        return json["Data"]["EJLinks"].Value<string>();
+        return json["Data"]?["EJLinks"]!.Value<string>();
       }
 
       private static async Task<string> DecodeUrl(string encoded) => await Task.Run(() => {
         var sub =
           $"{encoded.Substring(0, 10)}{encoded[encoded.Length - 1]}{encoded.Substring(12, encoded.Length - 13)}";
         var json = Encoding.UTF8.GetString(Convert.FromBase64String(sub));
-        return JObject.Parse(json)["MP4Link"].Value<string>();
+        return JObject.Parse(json)["MP4Link"]!.Value<string>();
       });
     }
   }

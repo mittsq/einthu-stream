@@ -33,7 +33,7 @@ namespace EinthuStream {
         ?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToArray();
       var avgRating = 0.0;
       var genre = Result.Type.Unknown;
-      if (rating.Length != 0) {
+      if (rating != null && rating.Length != 0) {
         var avg = (rating[3] + rating[4]) / 2;
         avgRating = Math.Round(avg / RoundTo) * RoundTo;
 
@@ -55,7 +55,7 @@ namespace EinthuStream {
       var title = parent.QuerySelector(".block2 .title > h3")?.TextContent;
       var trailer = extras?[1];
       var wiki = extras?[0];
-      var year = int.Parse(yearLang?.Substring(0, 4));
+      var year = int.Parse(yearLang?.Substring(0, 4)!);
 
       return new Result {
         CoverImageUrl = NormalizeLink(img),
@@ -95,7 +95,7 @@ namespace EinthuStream {
         ?.Select(_ => double.Parse(_.GetAttribute("data-value"))).ToArray();
       var avgRating = 0.0;
       var genre = Result.Type.Unknown;
-      if (rating.Length != 0) {
+      if (rating != null && rating.Length != 0) {
         var avg = (rating[3] + rating[4]) / 2;
         avgRating = Math.Round(avg / RoundTo) * RoundTo;
 
@@ -117,7 +117,7 @@ namespace EinthuStream {
       var title = parent.QuerySelector(".block2 .title > h2")?.TextContent;
       var trailer = extras?[1];
       var wiki = extras?[0];
-      var year = int.Parse(yearLang?.Substring(0, 4));
+      var year = int.Parse(yearLang?.Substring(0, 4)!);
       return new Result {
         CoverImageUrl = NormalizeLink(img),
         Description = null,
