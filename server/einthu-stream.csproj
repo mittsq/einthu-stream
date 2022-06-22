@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/mittsquared/einthu-stream/</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="106.10.1" />
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.3" />
